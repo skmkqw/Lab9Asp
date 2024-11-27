@@ -19,9 +19,16 @@ namespace WebApp.Controllers
         }
 
         // GET: Movie
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int size = 10)
         {
-            return View(await _context.Movies.ToListAsync());
+            return View(
+                await _context.Movies
+                    .OrderByDescending(m => m.Popularity)
+                    .Skip((page-1) * size)
+                    .Take(size)
+                    .AsNoTracking()
+                    .ToListAsync()
+            );
         }
 
         // GET: Movie/Details/5
